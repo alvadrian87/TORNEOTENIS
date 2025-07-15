@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Equipos de Dobles</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* Estilos específicos para esta página */
+        .doubles-team-form, .doubles-teams-list {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .doubles-team-form h2, .doubles-teams-list h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        .doubles-team-form .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .doubles-team-form .form-group select,
+        .doubles-team-form .form-group input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+        .doubles-team-form button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .doubles-team-form button:hover {
+            background-color: #218838;
+        }
+        .doubles-teams-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .doubles-teams-table th, .doubles-teams-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .doubles-teams-table th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        .doubles-teams-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .doubles-teams-table tbody tr:hover {
+            background-color: #e9e9e9;
+        }
+        .filter-buttons button {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s ease; /* Transición para el hover */
+        }
+        .filter-buttons button.active {
+            background-color: #0056b3; /* Color más oscuro para el botón activo */
+        }
+        .filter-buttons button:hover:not(.active) { /* Estilo hover solo si no está activo */
+            background-color: #0069d9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Gestión de Equipos de Dobles</h1>
+            <nav>
+                <ul>
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/add_player">Añadir Jugador</a></li>
+                    <li><a href="/proximos_partidos">Próximos Partidos</a></li>
+                    <li><a href="/all_matches">Todos los Partidos</a></li>
+                    <li><a href="/organizer">Organizador</a></li>
+                    <li><a href="/manage_doubles_teams">Gestión Dobles</a></li>
+                    <li><a href="/logout">Cerrar Sesión</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Bloque para mostrar mensajes flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <section class="doubles-team-form">
+            <h2>Crear Nuevo Equipo de Dobles</h2>
+            <div class="form-group">
+                <label for="player1-select">Jugador 1:</label>
+                <select id="player1-select"></select>
+            </div>
+            <div class="form-group">
+                <label for="player2-select">Jugador 2:</label>
+                <select id="player2-select"></select>
+            </div>
+            <button onclick="createDoublesTeam()">Crear Equipo</button>
+            <div id="create-team-message" class="message"></div>
+        </section>
+
+        <section class="doubles-teams-list">
+            <h2>Ranking de Equipos de Dobles</h2>
+            <div class="filter-buttons">
+                <!-- Asegúrate de que los onclick sean correctos -->
+                <button onclick="filterTeams('all')" id="filter-all-teams" class="active">Todos</button>
+                <button onclick="filterTeams('Masculino')" id="filter-Masculino-teams">Masculino</button>
+                <button onclick="filterTeams('Femenino')" id="filter-Femenino-teams">Femenino</button>
+            </div>
+            <table class="doubles-teams-table">
+                <thead>
+                    <tr>
+                        <th>Puesto</th>
+                        <th>Equipo</th>
+                        <th>Jugador 1</th>
+                        <th>Jugador 2</th>
+                        <th>Categoría</th>
+                        <th>Puesto Inicial</th>
+                        <th>Puntos</th>
+                        <!-- <th>Acciones</th> Opcional: editar/eliminar equipo -->
+                    </tr>
+                </thead>
+                <tbody id="doubles-teams-tbody">
+                    <!-- Los equipos se cargarán aquí -->
+                </tbody>
+            </table>
+            <p id="doubles-teams-loading-message">Cargando equipos...</p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Torneo de Tenis. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="/static/manage_doubles_teams.js"></script>
+</body>
+</html>

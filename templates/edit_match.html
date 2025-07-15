@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Resultado de Partido</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1>✏️ Editar Resultado del Partido</h1>
+        <nav>
+            <a href="/">Tabla de Posiciones</a>
+            <a href="/organizer">Interfaz del Organizador</a>
+        </nav>
+    </header>
+
+    <main>
+        <h3>Partido: {{ match.challenger_name }} vs {{ match.challenged_name }}</h3>
+        <p>Fecha original: {{ match.date }}</p>
+
+        {% if is_editable %}
+            <form action="{{ url_for('update_match', match_id=match.id) }}" method="POST">
+                <div class="scoreboard">
+                    <div class="set">
+                        <label>SET 1</label>
+                        <input type="number" name="set1_p1" value="{{ match.sets[0][0] if match.sets|length > 0 else '' }}" min="0">
+                        <input type="number" name="set1_p2" value="{{ match.sets[0][1] if match.sets|length > 0 else '' }}" min="0">
+                    </div>
+                    <div class="set">
+                        <label>SET 2</label>
+                        <input type="number" name="set2_p1" value="{{ match.sets[1][0] if match.sets|length > 1 else '' }}" min="0">
+                        <input type="number" name="set2_p2" value="{{ match.sets[1][1] if match.sets|length > 1 else '' }}" min="0">
+                    </div>
+                    <div class="set">
+                        <label>SET 3</label>
+                        <input type="number" name="set3_p1" value="{{ match.sets[2][0] if match.sets|length > 2 else '' }}" min="0">
+                        <input type="number" name="set3_p2" value="{{ match.sets[2][1] if match.sets|length > 2 else '' }}" min="0">
+                    </div>
+                </div>
+
+                <button type="submit">Actualizar Marcador</button>
+                <a href="{{ url_for('organizer_page') }}" class="button" style="background-color:#6c757d;">Cancelar</a>
+            </form>
+            <p style="margin-top:20px; color:red;">
+                <strong>Atención:</strong> Al actualizar este resultado, se revertirán las estadísticas y cambios de posición del partido original y se aplicarán los nuevos.
+            </p>
+        {% else %}
+            <div class="message error">
+                Este partido no puede ser editado porque no es el último partido jugado por uno de los participantes. Solo el último partido de un jugador puede ser modificado para mantener la consistencia del ranking.
+            </div>
+            <a href="{{ url_for('organizer_page') }}" class="button">Volver al Panel</a>
+        {% endif %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Torneo de Tenis por Desafíos</p>
+    </footer>
+</body>
+</html>

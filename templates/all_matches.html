@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todos los Partidos Jugados</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* Estilos específicos para la tabla de partidos, si es necesario */
+        #all-matches-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        #all-matches-table th, #all-matches-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #all-matches-table th {
+            background-color: #f2f2f2;
+        }
+        #all-matches-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        #all-matches-table tbody tr:hover {
+            background-color: #e9e9e9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Todos los Partidos Jugados</h1>
+            <nav>
+                <ul>
+                    <a href="/">Inicio</a>
+                    <a href="/proximos_partidos">Próximos Partidos</a>
+                    <a href="/all_matches">Todos los Partidos</a> <!-- ¡NUEVO ENLACE AQUÍ! -->
+                    <a href="/organizer">Organizador</a>
+                    <a href="/logout">Cerrar Sesión</a>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section>
+            <div id="all-matches-list">
+                <p>Cargando todos los partidos...</p>
+                <table id="all-matches-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Desafiante</th>
+                            <th>Desafiado</th>
+                            <th>Ganador</th>
+                            <th>Perdedor</th>
+                            <th>Resultado</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los partidos se cargarán aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Torneo de Tenis. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="/static/all_matches.js"></script> <!-- NUEVO SCRIPT -->
+</body>
+</html>

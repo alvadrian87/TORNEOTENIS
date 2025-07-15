@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de {{ player.first_name }} {{ player.last_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Perfil del Jugador</h1>
+        <nav>
+            <a href="/">Inicio</a>
+            <a href="/proximos_partidos">Próximos Partidos</a>
+            <a href="/all_matches">Todos los Partidos</a>
+        </nav>
+    </header>
+
+    <main class="profile-container">
+        <div class="profile-header">
+            <img class="profile-pic" src="{{ url_for('static', filename='uploads/' + player.photo_url if player.photo_url else 'img/default_avatar.png') }}" alt="Foto de {{ player.first_name }}">
+            <div class="profile-name">
+                <h2>{{ player.first_name }} {{ player.last_name }}</h2>
+                <p>Categoría: {{ player.category }}</p>
+            </div>
+        </div>
+
+        <div class="profile-details">
+            <h3>Detalles Personales</h3>
+            <div class="details-grid">
+                <p><strong>Email:</strong> {{ player.email or 'No disponible' }}</p>
+                <p><strong>Teléfono:</strong> {{ player.phone or 'No disponible' }}</p>
+                <p><strong>Localidad:</strong> {{ player.location or 'No disponible' }}</p>
+                <p><strong>Edad:</strong> {{ age or 'No disponible' }} años</p>
+                <p><strong>Sexo:</strong> {{ player.gender or 'No disponible' }}</p>
+            </div>
+        </div>
+
+        <div class="profile-details">
+            <h3>Detalles de Tenis</h3>
+            <div class="details-grid">
+                <p><strong>Mano Hábil:</strong> {{ player.dominant_hand or 'No disponible' }}</p>
+                <p><strong>Revés:</strong> {{ player.backhand_type or 'No disponible' }}</p>
+                <p><strong>Raqueta:</strong> {{ player.racquet or 'No disponible' }}</p>
+            </div>
+        </div>
+
+        <div class="profile-details">
+            <h3>Historial de Partidos</h3>
+            {% if matches %}
+                <ul>
+                    {% for match in matches %}
+                        <li>
+                            {{ match.date.split(' ')[0] }}:
+                            <strong>{{ match.winner_name }}</strong> ganó a
+                            (vs. {% if match.challenger_name == player.first_name + ' ' + player.last_name %}{{ match.challenged_name }}{% else %}{{ match.challenger_name }}{% endif %})
+                            con un resultado de <strong>{{ match.score_text }}</strong>.
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Este jugador aún no ha disputado partidos.</p>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Torneo de Tenis por Desafíos</p>
+    </footer>
+</body>
+</html>
