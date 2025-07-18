@@ -27,7 +27,7 @@ app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
 # Configuración de la base de datos y clave secreta
 app.config['DATABASE'] = os.path.join(app.instance_path, 'tournament.db')
-app.config['SECRET_KEY'] = 'os.environ.get('FLASK_SECRET_KEY')
+app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev_default_secret_key_if_env_not_set')
 os.makedirs(app.instance_path, exist_ok=True)
 
 # --- Decorador para Proteger Rutas ---
