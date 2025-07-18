@@ -1,6 +1,7 @@
 import sqlite3
 import os
 import traceback
+import os
 from datetime import datetime
 from flask import Flask, request, jsonify, send_from_directory, g, render_template, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -26,7 +27,7 @@ app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
 # Configuración de la base de datos y clave secreta
 app.config['DATABASE'] = os.path.join(app.instance_path, 'tournament.db')
-app.config['SECRET_KEY'] = '3d884d681ec7af96e0b4c8d9be19c7bc067468433496ce14'
+app.config['SECRET_KEY'] = 'os.environ.get('FLASK_SECRET_KEY')
 os.makedirs(app.instance_path, exist_ok=True)
 
 # --- Decorador para Proteger Rutas ---
