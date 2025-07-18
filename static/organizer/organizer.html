@@ -4,8 +4,162 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organizador del Torneo</title>
-    <!-- RUTA ABSOLUTA AL CSS -->
-    <link rel="stylesheet" href="/static/style.css"> 
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* Estilos específicos para las pestañas en organizer.html */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab-button {
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            margin-right: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .tab-button:hover {
+            background-color: #e9e9e9;
+        }
+        .tab-button.active {
+            background-color: #fff;
+            border-bottom: 2px solid #fff; /* Para que parezca conectado al contenido */
+            font-weight: bold;
+            color: #007bff;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px 0; /* Padding solo vertical para no interferir con el ancho del card */
+            border-top: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Asegúrate de que tus .card existentes se vean bien dentro de tab-content */
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px; /* Espacio entre cards si hay varios dentro de una pestaña */
+        }
+        
+        /* Estilos para el formulario de creación de torneo */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="url"],
+        .form-group input[type="datetime-local"],
+        .form-group input[type="date"], /* Añadido para type="date" */
+        .form-group input[type="number"], /* Añadido para type="number" */
+        .form-group select,
+        .form-group textarea {
+            width: calc(100% - 22px); /* Ajuste para padding y border */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        .form-group textarea {
+            resize: vertical;
+        }
+        .form-group .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .form-group .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+
+
+        /* Estilo para el botón general */
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .button-danger {
+            background-color: #dc3545;
+        }
+        .button-danger:hover {
+            background-color: #c82333;
+        }
+        .button-warning {
+            background-color: #ffc107;
+            color: #333;
+        }
+        .button-warning:hover {
+            background-color: #e0a800;
+        }
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+        .message.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border-color: #bee5eb;
+        }
+
+        /* Estilos para las listas de desafíos pendientes */
+        #pending-challenges-list ul, #pending-doubles-challenges-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        #pending-challenges-list li, #pending-doubles-challenges-list li {
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap; /* Para que los botones se envuelvan en pantallas pequeñas */
+        }
+        #pending-challenges-list li span, #pending-doubles-challenges-list li span {
+            flex-grow: 1; /* Ocupa el espacio disponible */
+            margin-right: 10px;
+        }
+        #pending-challenges-list li button, #pending-doubles-challenges-list li button {
+            margin-left: 5px;
+            margin-top: 5px; /* Para que los botones tengan un pequeño margen vertical si se envuelven */
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -13,182 +167,253 @@
             <h1>Panel del Organizador</h1>
             <nav>
                 <ul>
-                    <a href="/">Inicio</a>
-                    <a href="/add_player">Añadir Jugador</a>
-                    <a href="/manage_doubles_teams">Gestión Dobles</a>
-                    <a href="/proximos_partidos">Próximos Partidos</a>
-                    <a href="/organizer">Organizador</a>
-                    <a href="/all_matches">Todos los Partidos</a> <!-- ¡NUEVO ENLACE AQUÍ! -->
-                    <a href="/logout">Cerrar Sesión</a>
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/all_matches">Todos los Partidos</a></li>
+                    <li><a href="/manage_doubles_teams">Gestión Equipos Dobles</a></li>
+                    <li><a href="/logout">Cerrar Sesión</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <main class="container">
-        <!-- Sección de Carga de Jugadores -->
-        <section>
-            <h2 class="section-title">Gestión de Jugadores</h2>
-            <div class="form-group">
-                <label for="challenger-select">Seleccione Desafiante:</label>
-                <select id="challenger-select" class="select-full-width"></select>
-            </div>
-            <div class="form-group">
-                <label for="challenged-select">Seleccione Desafiado:</label>
-                <select id="challenged-select" class="select-full-width"></select>
-            </div>
-            <button class="button" onclick="validateChallenge()">Validar Desafío</button>
-            <div id="challenge-validation-message" class="message"></div>
-        </section>
+        <div id="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
 
-        <!-- NUEVA SECCIÓN: Gestión de Desafíos de Dobles -->
-        <section style="margin-top: 30px;">
-            <h2 class="section-title">Gestión de Desafíos de Dobles</h2>
-            <div class="form-group">
-                <label for="challenger-team-select">Seleccione Equipo Desafiante:</label>
-                <select id="challenger-team-select" class="select-full-width"></select>
-            </div>
-            <div class="form-group">
-                <label for="challenged-team-select">Seleccione Equipo Desafiado:</label>
-                <select id="challenged-team-select" class="select-full-width"></select>
-            </div>
-            <button class="button" onclick="validateDoublesChallenge()">Validar Desafío Dobles</button>
-            <div id="doubles-challenge-validation-message" class="message"></div>
-        </section>
-
-        <!-- SECCIÓN: Desafíos Pendientes -->
-        <section style="margin-top: 30px;">
-            <h2 class="section-title">Desafíos Pendientes</h2>
-            <div id="pending-challenges-list">
-                <!-- Los desafíos pendientes se cargarán aquí por JavaScript -->
-                <p>Cargando desafíos pendientes...</p>
-            </div>
-        </section>
-
-        <section style="margin-top: 30px;">
-            <h2 class="section-title">Desafíos de Dobles Pendientes</h2>
-            <div id="pending-doubles-challenges-list">
-                <!-- Los desafíos de dobles pendientes se cargarán aquí por JavaScript -->
-                <p>Cargando desafíos de dobles pendientes...</p>
-            </div>
-        </section>
-
-        <!-- FIN SECCIÓN Desafíos Pendientes -->
-
-        <!-- SECCIÓN: Ingresar Resultado del Partido (DEBE ESTAR AQUÍ) -->
-        <!-- Esta sección se muestra/oculta con JavaScript -->
-        <section id="score-entry-form" style="display: none; margin-top: 30px;">
-            <h2 class="section-title">Ingresar Resultado del Partido</h2>
-            <p>Ingrese los sets del partido.</p>
-            <!-- INPUT OCULTO PARA ALMACENAR EL ID DEL DESAFÍO -->
-            <input type="hidden" id="hidden-challenge-id" value=""> 
-
-            <div class="form-group">
-                <label>Set 1:</label>
-                <input type="number" id="set1-challenger" placeholder="Desafiante" min="0" max="7"> - 
-                <input type="number" id="set1-challenged" placeholder="Desafiado" min="0" max="7">
-            </div>
-            <div class="form-group">
-                <label>Set 2:</label>
-                <input type="number" id="set2-challenger" placeholder="Desafiante" min="0" max="7"> - 
-                <input type="number" id="set2-challenged" placeholder="Desafiado" min="0" max="7">
-            </div>
-            <div class="form-group">
-                <label>Set 3 (Opcional):</label>
-                <input type="number" id="set3-challenger" placeholder="Desafiante" min="0" max="7"> - 
-                <input type="number" id="set3-challenged" placeholder="Desafiado" min="0" max="7">
-            </div>
-            <button class="button" onclick="submitMatchResult()">Enviar Resultado</button>
-            <div id="result-message" class="message"></div>
-        </section>
-        <!-- FIN SECCIÓN Ingresar Resultado del Partido -->
-        <section id="doubles-score-entry-form" style="display: none; margin-top: 30px;">
-            <h2 class="section-title">Ingresar Resultado del Partido de Dobles</h2>
-            <p>Ingrese los sets del partido de dobles.</p>
-            <!-- INPUT OCULTO PARA ALMACENAR EL ID DEL DESAFÍO DE DOBLES -->
-            <input type="hidden" id="hidden-doubles-challenge-id" value=""> 
-
-            <div class="form-group">
-                <label>Set 1:</label>
-                <input type="number" id="doubles-set1-challenger" placeholder="Equipo Desafiante" min="0" max="7"> - 
-                <input type="number" id="doubles-set1-challenged" placeholder="Equipo Desafiado" min="0" max="7">
-            </div>
-            <div class="form-group">
-                <label>Set 2:</label>
-                <input type="number" id="doubles-set2-challenger" placeholder="Equipo Desafiante" min="0" max="7"> - 
-                <input type="number" id="doubles-set2-challenged" placeholder="Equipo Desafiado" min="0" max="7">
-            </div>
-            <div class="form-group">
-                <label>Set 3 (Opcional):</label>
-                <input type="number" id="doubles-set3-challenger" placeholder="Equipo Desafiante" min="0" max="7"> - 
-                <input type="number" id="doubles-set3-challenged" placeholder="Equipo Desafiado" min="0" max="7">
-            </div>
-            <button class="button" onclick="submitDoublesMatchResult()">Enviar Resultado Dobles</button>
-            <div id="doubles-result-message" class="message"></div>
-        </section>
-        
-        <!-- Sección de Historial de Jugador -->
-        <section style="margin-top: 30px;">
-            <h2 class="section-title">Historial de Jugador</h2>
-            <div class="form-group">
-                <label for="history-player-select">Seleccione un Jugador:</label>
-                <select id="history-player-select" class="select-full-width" onchange="showOrganizerPlayerHistory()"></select>
-            </div>
-            <div id="organizer-history-list">
-                <!-- El historial se cargará aquí -->
-            </div>
-        </section>
-
-        <!-- Sección de Reiniciar Tabla -->
-        <section style="margin-top: 30px;">
-            <h2 class="section-title">Reiniciar Temporada</h2>
-            <p>Esto actualizará el "Puesto Inicial" de todos a su puesto actual y reiniciará los puntos.</p>
-            <button class="button" onclick="resetLeaderboard()" style="background-color: #dc3545;">Reiniciar Tabla de Posiciones</button>
-            <div id="reset-message" class="message"></div>
-        </section>
-    </main>
-
-<!-- static/organizer/organizer.html -->
-<!-- ... (después de la última sección en tu main, por ejemplo, Reiniciar Temporada) ... -->
-
-    <!-- MODAL PARA EDITAR PARTIDO -->
-    <div id="edit-match-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close-button" onclick="closeEditMatchModal()">&times;</span>
-            <h2 class="section-title">Editar Resultado del Partido</h2>
-            <p>Editando partido entre: <strong id="edit-challenger-name"></strong> vs <strong id="edit-challenged-name"></strong></p>
-            <input type="hidden" id="edit-match-id" value="">
-
-            <div class="form-group">
-                <label>Set 1:</label>
-                <input type="number" id="edit-set1-challenger" placeholder="Desafiante" min="0" max="7"> - 
-                <input type="number" id="edit-set1-challenged" placeholder="Desafiado" min="0" max="7">
-            </div>
-            <div class="form-group">
-                <label>Set 2:</label>
-                <input type="number" id="edit-set2-challenger" placeholder="Desafiante" min="0" max="7"> - 
-                <input type="number" id="edit-set2-challenged" placeholder="Desafiado" min="0" max="7">
-            </div>
-            <div class="form-group">
-                <label>Set 3 (Opcional):</label>
-                <input type="number" id="edit-set3-challenger" placeholder="Desafiante" min="0" max="7"> - 
-                <input type="number" id="edit-set3-challenged" placeholder="Desafiado" min="0" max="7">
-            </div>
-            <button class="button" onclick="submitEditedMatchResult()">Guardar Cambios</button>
-            <div id="edit-result-message" class="message"></div>
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab(event, 'individual-management')">Individuales</button>
+            <button class="tab-button" onclick="openTab(event, 'doubles-management')">Dobles</button>
+            <button class="tab-button" onclick="openTab(event, 'tournament-management')">Torneos</button>
+            <button class="tab-button" onclick="openTab(event, 'settings-management')">Ajustes</button>
         </div>
-    </div>
-    <!-- FIN MODAL PARA EDITAR PARTIDO -->
 
-<!-- ... (tu footer) ... -->
+        <div id="individual-management" class="tab-content active">
+            <section class="card">
+                <h2>Gestión de Desafíos Individuales</h2>
+                <div class="form-group">
+                    <label for="challenger-select">Desafiante:</label>
+                    <select id="challenger-select" onchange="validateChallenge()"></select>
+                </div>
+                <div class="form-group">
+                    <label for="challenged-select">Desafiado:</label>
+                    <select id="challenged-select" onchange="validateChallenge()"></select>
+                </div>
+                <p id="challenge-validation-message" class="message"></p>
+
+                <div id="score-entry-form" style="display: none;">
+                    <h3>Ingresar Resultado del Partido Individual</h3>
+                    <input type="hidden" id="hidden-challenge-id">
+                    <div class="form-group">
+                        <label>Set 1:</label>
+                        <input type="number" id="set1-challenger" placeholder="Desafiante" min="0" max="7">
+                        <input type="number" id="set1-challenged" placeholder="Desafiado" min="0" max="7">
+                    </div>
+                    <div class="form-group">
+                        <label>Set 2:</label>
+                        <input type="number" id="set2-challenger" placeholder="Desafiante" min="0" max="7">
+                        <input type="number" id="set2-challenged" placeholder="Desafiado" min="0" max="7">
+                    </div>
+                    <div class="form-group">
+                        <label>Set 3 (Opcional):</label>
+                        <input type="number" id="set3-challenger" placeholder="Desafiante" min="0" max="7">
+                        <input type="number" id="set3-challenged" placeholder="Desafiado" min="0" max="7">
+                    </div>
+                    <button onclick="submitMatchResult()">Registrar Resultado Individual</button>
+                    <p id="result-message" class="message"></p>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Desafíos Individuales Pendientes</h2>
+                <div id="pending-challenges-list">
+                    <p>Cargando desafíos pendientes...</p>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Historial de Partido de Jugador (Individual)</h2>
+                <div class="form-group">
+                    <label for="history-player-select">Seleccione un Jugador:</label>
+                    <select id="history-player-select" onchange="showOrganizerPlayerHistory()"></select>
+                </div>
+                <div id="organizer-history-list">
+                    <p>Seleccione un jugador para ver su historial.</p>
+                </div>
+            </section>
+        </div>
+
+        <div id="doubles-management" class="tab-content">
+            <section class="card">
+                <h2>Gestión de Desafíos de Dobles</h2>
+                <div class="form-group">
+                    <label for="challenger-team-select">Equipo Desafiante:</label>
+                    <select id="challenger-team-select" onchange="validateDoublesChallenge()"></select>
+                </div>
+                <div class="form-group">
+                    <label for="challenged-team-select">Equipo Desafiado:</label>
+                    <select id="challenged-team-select" onchange="validateDoublesChallenge()"></select>
+                </div>
+                <p id="doubles-challenge-validation-message" class="message"></p>
+
+                <div id="doubles-score-entry-form" style="display: none;">
+                    <h3>Ingresar Resultado del Partido de Dobles</h3>
+                    <input type="hidden" id="hidden-doubles-challenge-id">
+                    <div class="form-group">
+                        <label>Set 1:</label>
+                        <input type="number" id="doubles-set1-challenger" placeholder="Equipo Desafiante" min="0" max="7">
+                        <input type="number" id="doubles-set1-challenged" placeholder="Equipo Desafiado" min="0" max="7">
+                    </div>
+                    <div class="form-group">
+                        <label>Set 2:</label>
+                        <input type="number" id="doubles-set2-challenger" placeholder="Equipo Desafiante" min="0" max="7">
+                        <input type="number" id="doubles-set2-challenged" placeholder="Equipo Desafiado" min="0" max="7">
+                    </div>
+                    <div class="form-group">
+                        <label>Set 3 (Opcional):</label>
+                        <input type="number" id="doubles-set3-challenger" placeholder="Equipo Desafiante" min="0" max="7">
+                        <input type="number" id="doubles-set3-challenged" placeholder="Equipo Desafiado" min="0" max="7">
+                    </div>
+                    <button onclick="submitDoublesMatchResult()">Registrar Resultado Dobles</button>
+                    <p id="doubles-result-message" class="message"></p>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Desafíos de Dobles Pendientes</h2>
+                <div id="pending-doubles-challenges-list">
+                    <p>Cargando desafíos pendientes...</p>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Reiniciar Contadores de Actividad de Ciclo / Tabla General</h2>
+                <button type="button" class="button button-warning" onclick="resetActivityCycle()">
+                    Reiniciar Ciclo de Actividad Global
+                </button>
+                <p id="reset-cycle-message" class="message"></p>
+                <br>
+                <button type="button" class="button button-danger" onclick="resetLeaderboard()">
+                    Reiniciar Ranking General Completo (Solo Puntos y Puesto Inicial)
+                </button>
+                <p id="reset-message" class="message"></p>
+            </section>
+        </div>
+
+        <div id="tournament-management" class="tab-content">
+            <section class="card">
+                <h2>Gestión de Torneos</h2>
+
+                <form id="create-tournament-form">
+                    <h3>Crear Nuevo Torneo</h3>
+                    <div class="form-group">
+                        <label for="tournament-name">Nombre del Torneo:</label>
+                        <input type="text" id="tournament-name" name="name" required placeholder="Ej. Liga Pirámide Principal - Individual">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tournament-type">Tipo de Torneo:</label>
+                        <select id="tournament-type" name="type" required>
+                            <option value="">Seleccione un tipo</option>
+                            <option value="pyramid_single">Pirámide Individual (Afecta Ranking Maestro)</option>
+                            <option value="pyramid_doubles_male">Pirámide Dobles Masculino (Afecta Ranking Maestro)</option>
+                            <option value="pyramid_doubles_female">Pirámide Dobles Femenino (Afecta Ranking Maestro)</option>
+                            <option value="satellite_single">Satélite Individual (Ranking Propio)</option>
+                            <option value="satellite_doubles_male">Satélite Dobles Masculino (Ranking Propio)</option>
+                            <option value="satellite_doubles_female">Satélite Dobles Femenino (Ranking Propio)</option>
+                            <option value="satellite_doubles_mixed">Satélite Dobles Mixto (Ranking Propio)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tournament-start-date">Fecha de Inicio del Torneo:</label>
+                        <input type="date" id="tournament-start-date" name="start_date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tournament-end-date">Fecha de Fin del Torneo:</label>
+                        <input type="date" id="tournament-end-date" name="end_date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registration-start-date">Inicio de Registro (Opcional):</label>
+                        <input type="datetime-local" id="registration-start-date" name="registration_start_date">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registration-end-date">Fin de Registro (Opcional):</label>
+                        <input type="datetime-local" id="registration-end-date" name="registration_end_date">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tournament-category">Categoría (Opcional):</label>
+                        <input type="text" id="tournament-category" name="category" placeholder="Ej. A, B, Mixta, +35">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tournament-max-slots">Cupos Máximos (0 para ilimitado):</label>
+                        <input type="number" id="tournament-max-slots" name="max_slots" min="0" value="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tournament-cost">Costo de Inscripción ($):</label>
+                        <input type="number" id="tournament-cost" name="cost" min="0" step="0.01" value="0.00">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tournament-requirements">Requisitos (Opcional):</label>
+                        <textarea id="tournament-requirements" name="requirements" placeholder="Ej. Solo jugadores federados, Edad mínima 18..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tournament-location">Ubicación (Opcional):</label>
+                        <input type="text" id="tournament-location" name="location" placeholder="Ej. Canchas del Club, Polideportivo Municipal">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tournament-rules-url">URL de Reglas (Opcional):</label>
+                        <input type="url" id="tournament-rules-url" name="rules_url" placeholder="Ej. http://tusitio.com/reglas.pdf">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="tournament-is-published" name="is_published">
+                            <label for="tournament-is-published">Publicar torneo (Visible para jugadores)</label>
+                        </div>
+                    </div>
+
+                    <div id="create-tournament-message" class="message"></div> <button type="submit" id="create-tournament-btn" class="button">Crear Torneo</button>
+                </form>
+
+                <hr style="margin: 30px 0;">
+
+                <h3>Lista de Torneos Existentes</h3>
+                <div id="tournaments-list">
+                    <p>Cargando torneos...</p>
+                    </div>
+            </section>
+        </div>
+
+        <div id="settings-management" class="tab-content">
+             <section class="card">
+                <h2>Ajustes Generales del Torneo</h2>
+                <p>Aquí se gestionarán los ajustes como la duración de los ciclos de actividad, el torneo activo, etc.</p>
+                </section>
+        </div>
+
+    </main>
 
     <footer>
         <div class="container">
             <p>&copy; 2024 Torneo de Tenis. Todos los derechos reservados.</p>
         </div>
     </footer>
-
-    <!-- RUTA ABSOLUTA AL JAVASCRIPT -->
-    <script src="/static/organizer/organizer.js"></script> 
+    <script src="/static/organizer/organizer.js"></script>
 </body>
 </html>

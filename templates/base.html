@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema de Torneo de Tenis{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {# Bloque para añadir CSS adicional específico de cada página #}
+    {% block head_extra %}{% endblock %}
+</head>
+<body data-user-id="{{ session.user_id if session.user_id is not none else '' }}" 
+    data-player-id="{{ session.player_id if session.player_id is not none else '' }}"
+    >
+    <header>
+        <div class="container">
+            <h1>Sistema de Torneo de Tenis</h1>
+            <nav>
+                <ul>
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="{{ url_for('tournaments_page') }}">Torneos</a></li> {# Enlace a la página de torneos #}
+                    
+                    {% if session.get('user_id') %}
+                        {# Si el usuario está logueado #}
+                        <li><a href="{{ url_for('player_dashboard_page') }}">Mi Panel</a></li> {# Para jugadores normales #}
+                        
+                        {% if session.get('is_admin') %}
+                            {# Solo visible para administradores #}
+                            <li><a href="{{ url_for('organizer_page') }}">Panel Organizador</a></li>
+                        {% endif %}
+
+                        <li><a href="{{ url_for('logout') }}">Cerrar Sesión</a></li>
+                    {% else %}
+                        {# Si el usuario no está logueado #}
+                        <li><a href="{{ url_for('login') }}">Iniciar Sesión</a></li>
+                        <li><a href="{{ url_for('register') }}">Registrarse</a></li>
+                    {% endif %}
+                    {# Eliminar enlaces a páginas que no existen o ya no se usan #}
+                    {# <li><a href="/all_matches">Todos los Partidos</a></li> #}
+                    {# <li><a href="/proximos_partidos">Próximos Partidos</a></li> #}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {# Este es el div para los mensajes flash generales #}
+        <div class="flash-messages" id="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        {# Este es el bloque donde el contenido de cada página se insertará #}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sistema de Torneo de Tenis. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    {# Bloque para añadir JavaScript adicional específico de cada página #}
+    {% block scripts_extra %}{% endblock %}
+</body>
+</html>

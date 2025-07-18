@@ -1,27 +1,65 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil de {{ player.first_name }} {{ player.last_name }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Perfil del Jugador</h1>
-        <nav>
-            <a href="/">Inicio</a>
-            <a href="/proximos_partidos">Próximos Partidos</a>
-            <a href="/all_matches">Todos los Partidos</a>
-        </nav>
-    </header>
+{% extends 'base.html' %}
 
+{% block title %}Perfil de {{ player.first_name }} {{ player.last_name }}{% endblock %}
+
+{% block head_extra %}
+    <style>
+        /* Estilos específicos para el perfil del jugador */
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #007bff;
+        }
+        .profile-name h2 { margin: 0; color: #007bff; }
+        .profile-name p { margin: 5px 0; color: #555; }
+
+        .profile-details {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .profile-details h3 { margin-top: 0; color: #333; }
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+        .details-grid p { margin: 0; }
+        .profile-details ul { list-style: none; padding: 0; }
+        .profile-details ul li {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 8px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
     <main class="profile-container">
         <div class="profile-header">
             <img class="profile-pic" src="{{ url_for('static', filename='uploads/' + player.photo_url if player.photo_url else 'img/default_avatar.png') }}" alt="Foto de {{ player.first_name }}">
             <div class="profile-name">
                 <h2>{{ player.first_name }} {{ player.last_name }}</h2>
-                <p>Categoría: {{ player.category }}</p>
+                <p>Categoría: {{ player.category or 'No disponible' }}</p> {# Asegúrate de que player.category exista o sea 'No disponible' #}
             </div>
         </div>
 
@@ -63,9 +101,8 @@
             {% endif %}
         </div>
     </main>
+{% endblock %}
 
-    <footer>
-        <p>&copy; 2025 Torneo de Tenis por Desafíos</p>
-    </footer>
-</body>
-</html>
+{% block scripts_extra %}
+    {# Si tienes algún JS específico para player_profile.html #}
+{% endblock %}

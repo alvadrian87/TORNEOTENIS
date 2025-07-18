@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Completar Perfil de Jugador{% endblock %}
+
+{% block head_extra %}
+    <style>
+        /* Estilos específicos para este formulario, puedes moverlos a style.css */
+        .profile-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 120px);
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .profile-box {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+        .profile-box h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .profile-box .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .profile-box label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        .profile-box input[type="text"],
+        .profile-box input[type="email"],
+        .profile-box input[type="tel"],
+        .profile-box input[type="date"],
+        .profile-box select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .profile-box button {
+            background-color: #28a745; /* Color de éxito */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        .profile-box button:hover {
+            background-color: #218838;
+        }
+        .profile-box .message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .profile-box .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+        .profile-box .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <main class="profile-container">
+        <div class="profile-box">
+            <h1>Datos Personales del Jugador</h1>
+            <p>¡Bienvenido! Para participar en los torneos, por favor completa tu información de jugador.</p>
+            <form id="player-profile-form" action="/complete_player_profile" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="first_name">Nombre:</label>
+                    <input type="text" id="first_name" name="first_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Apellido:</label>
+                    <input type="text" id="last_name" name="last_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required value="{{ session.email }}" readonly>
+                    <small>Este email debe coincidir con el de tu cuenta de usuario.</small>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Teléfono (Opcional):</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+                <div class="form-group">
+                    <label for="gender">Género:</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Seleccione</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="birth_date">Fecha de Nacimiento:</label>
+                    <input type="date" id="birth_date" name="birth_date">
+                </div>
+                <div class="form-group">
+                    <label for="location">Ubicación (Opcional):</label>
+                    <input type="text" id="location" name="location">
+                </div>
+                <div class="form-group">
+                    <label for="dominant_hand">Mano Dominante:</label>
+                    <select id="dominant_hand" name="dominant_hand">
+                        <option value="">Seleccione</option>
+                        <option value="Derecha">Derecha</option>
+                        <option value="Izquierda">Izquierda</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="backhand_type">Tipo de Revés:</label>
+                    <select id="backhand_type" name="backhand_type">
+                        <option value="">Seleccione</option>
+                        <option value="Una mano">Una mano</option>
+                        <option value="Dos manos">Dos manos</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="racquet">Raqueta (Opcional):</label>
+                    <input type="text" id="racquet" name="racquet">
+                </div>
+                <div class="form-group">
+                    <label for="photo">Foto de Perfil (Opcional):</label>
+                    <input type="file" id="photo" name="photo" accept="image/*">
+                </div>
+                <button type="submit">Guardar Perfil de Jugador</button>
+            </form>
+        </div>
+    </main>
+{% endblock %}
+
+{% block scripts_extra %}
+    <script src="{{ url_for('static', filename='complete_player_profile.js') }}"></script>
+{% endblock %}

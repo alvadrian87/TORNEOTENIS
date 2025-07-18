@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard del Jugador{% endblock %}
+
+{% block head_extra %}
+    <style>
+        /* Estilos específicos para el dashboard del jugador */
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .player-info-section, .doubles-partner-management-section, .player-stats-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilos para las solicitudes de compañero */
+        .request-item {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Para que los botones se envuelvan en pantallas pequeñas */
+        }
+        .request-item p {
+            margin: 0;
+            flex-grow: 1;
+        }
+        .request-actions button {
+            margin-left: 10px;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .request-actions .accept-btn {
+            background-color: #28a745; /* Verde */
+            color: white;
+        }
+        .request-actions .accept-btn:hover {
+            background-color: #218838;
+        }
+        .request-actions .reject-btn {
+            background-color: #dc3545; /* Rojo */
+            color: white;
+        }
+        .request-actions .reject-btn:hover {
+            background-color: #c82333;
+        }
+        .request-actions .cancel-btn {
+            background-color: #ffc107; /* Amarillo/Naranja */
+            color: #333;
+        }
+        .request-actions .cancel-btn:hover {
+            background-color: #e0a800;
+        }
+        .request-status {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status-pending { color: #ffc107; } /* Amarillo */
+        .status-accepted { color: #28a745; } /* Verde */
+        .status-rejected { color: #dc3545; } /* Rojo */
+        .status-cancelled { color: #6c757d; } /* Gris */
+    </style>
+{% endblock %}
+
+{% block content %}
+    {# DEBUG: Player ID recibido en HTML: {{ player_id }} #} {# <-- AÑADIR ESTA LÍNEA AQUÍ #}
+    {# Mensaje si el perfil de jugador no está vinculado #}
+    {% if not player_is_linked %}
+        <div class="player-info-section alert-info">
+            <p>Tu cuenta no está vinculada a un perfil de jugador. Por favor, completa tu perfil para acceder a todas las funcionalidades.</p>
+            <a href="{{ url_for('complete_player_profile') }}" class="button">Completar Perfil de Jugador</a>
+        </div>
+    {% else %}
+        {# Sección de información del jugador #}
+        <div class="player-info-section card">
+            <h2>Hola, <span id="player-greeting-name">{{ player_greeting_name }}</span>!</h2> 
+            <p>Tu Email: <span id="player-email">{{ player_info.email if player_info else 'N/A' }}</span></p>
+            <p>Nombre Completo: <span id="player-full-name">{{ player_info.first_name }} {{ player_info.last_name }}</span></p>
+            <p>Tu Posición Actual: <span id="player-current-position">{{ player_info.current_position if player_info else 'N/A' }}</span></p>
+            <a href="{{ url_for('complete_player_profile') }}" class="button small-button">Editar mi perfil</a>
+        </div>
+
+        {# SECCIÓN DE GESTIÓN DE COMPAÑEROS DE DOBLES (REINTRODUCIDA) #}
+        <div class="doubles-partner-management-section card">
+            <h2>Gestión de Solicitudes de Compañero</h2>
+            <div class="flash-messages" id="doubles-flash-messages"></div> {# Para mensajes específicos de dobles #}
+            
+            <h3>Mis Solicitudes Enviadas</h3>
+            <div id="sent-requests-list">
+                <p>Cargando solicitudes enviadas...</p>
+            </div>
+
+            <h3>Solicitudes Recibidas por Mí</h3>
+            <div id="received-requests-list">
+                <p>Cargando solicitudes recibidas...</p>
+            </div>
+        </div>
+        {# FIN SECCIÓN REINTRODUCIDA #}
+
+        {# Sección de Estadísticas de Jugador #}
+        <div class="player-stats-section card">
+            <h2>Tus Estadísticas (Ranking Maestro)</h2>
+            <p>Índice de Actividad Individual: <span id="player-activity-single">Cargando...</span></p>
+            <p>Estado de Actividad Individual: <span id="player-status-single">Cargando...</span></p>
+            <p>Índice de Actividad Dobles: <span id="player-activity-doubles">Cargando...</span></p>
+            <p>Estado de Actividad Dobles: <span id="player-status-doubles">Cargando...</span></p>
+            <p>Estado General de Actividad: <span id="player-status-general">Cargando...</span></p>
+            <p>Última Actualización de Actividad: <span id="player-last-activity-update">Cargando...</span></p>
+            <p>Rechazos en Ciclo Actual: <span id="player-rejections-current-cycle">Cargando...</span></p>
+            <p>Rechazos Totales: <span id="player-rejections-total">Cargando...</span></p>
+
+            <div id="player-matches-history">
+                <h3>Tu Historial de Partidos Recientes</h3>
+                <p>Cargando historial...</p>
+            </div>
+        </div>
+
+    {% endif %}
+{% endblock %}
+
+{% block scripts_extra %}
+    <script src="{{ url_for('static', filename='player_dashboard.js') }}"></script>
+{% endblock %}

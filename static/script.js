@@ -85,6 +85,15 @@
             const row = tbodyElement.insertRow();
 
             if (type === 'single') {
+                // ... (código existente para jugadores individuales, que ya aplicamos el color de fila) ...
+                row.classList.add(`activity-${item.activity_status}`);
+                row.title = `Estado de Actividad:\n` +
+                            `General: ${item.activity_status.charAt(0).toUpperCase() + item.activity_status.slice(1)}\n` +
+                            `Individual: ${item.activity_status_single.charAt(0).toUpperCase() + item.activity_status_single.slice(1)}\n` +
+                            `Dobles (Jugador): ${item.activity_status_doubles.charAt(0).toUpperCase() + item.activity_status_doubles.slice(1)}\n` + // Asegúrate que esta línea esté bien
+                            `Rechazos (ciclo): ${item.rejections_current_cycle}\n` +
+                            `Última Act.: ${item.last_activity_update_formatted}`;
+
                 const photoCell = row.insertCell();
                 const img = document.createElement('img');
                 img.className = 'player-photo';
@@ -107,18 +116,44 @@
                 }
                 genderCell.appendChild(genderIcon);
 
+
                 row.insertCell().textContent = item.initial_position;
                 const positionsClimbed = item.initial_position - item.current_position;
                 const climbCell = row.insertCell();
                 climbCell.textContent = positionsClimbed > 0 ? `+${positionsClimbed}` : positionsClimbed;
+                // Aplicar color a los cambios de puesto
+                if (positionsClimbed > 0) {
+                    climbCell.style.color = 'green';
+                    climbCell.style.fontWeight = 'bold';
+                } else if (positionsClimbed < 0) {
+                    climbCell.style.color = 'red';
+                    climbCell.style.fontWeight = 'bold';
+                } else {
+                    climbCell.style.color = 'gray';
+                }
 
                 const actionsCell = row.insertCell();
                 const historyButton = document.createElement('button');
                 historyButton.textContent = 'Ver Historial';
+                historyButton.className = 'button'; // Asume que tienes un estilo .button
                 historyButton.onclick = () => showPlayerHistory(item.id, item.name);
                 actionsCell.appendChild(historyButton);
 
             } else if (type.startsWith('doubles_')) {
+                // AÑADE ESTA LÍNEA PARA APLICAR LA CLASE A LA FILA ENTERA EN DOBLES
+                row.classList.add(`activity-${item.activity_status_team_doubles}`);
+
+                // AÑADE EL TOOLTIP DETALLADO PARA LOS EQUIPOS DE DOBLES
+                row.title = `Estado de Actividad (Equipo):\n` +
+                            `Estado: ${item.activity_status_team_doubles.charAt(0).toUpperCase() + item.activity_status_team_doubles.slice(1)}\n` +
+                            `Desafíos Emitidos: ${item.challenges_emitted_team_doubles}\n` +
+                            `Desafíos Aceptados: ${item.challenges_accepted_team_doubles}\n` +
+                            `Desafíos Ganados: ${item.challenges_won_team_doubles}\n` +
+                            `Defensas Exitosas: ${item.defenses_successful_team_doubles}\n` +
+                            `Rechazos (ciclo): ${item.rejections_team_doubles_current_cycle}\n` +
+                            `Última Act.: ${item.last_activity_team_doubles_update_formatted}`;
+
+
                 row.insertCell().textContent = item.current_position;
                 row.insertCell().textContent = item.team_name;
                 row.insertCell().textContent = item.player1_name;

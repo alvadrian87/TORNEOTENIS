@@ -486,3 +486,31 @@ table th, table td {
     text-decoration: none;
     cursor: pointer;
 }
+
+/* Estilos para las filas de la tabla de ranking según el estado de actividad */
+.ranking-table-container table tbody tr.activity-verde {
+    background-color: #e6ffe6; /* Un verde muy claro */
+    border-left: 5px solid #28a745; /* Una línea verde a la izquierda */
+}
+
+.ranking-table-container table tbody tr.activity-amarillo {
+    background-color: #fffacd; /* Un amarillo claro (lemonchiffon) */
+    border-left: 5px solid #ffc107; /* Una línea amarilla/naranja a la izquierda */
+}
+
+.ranking-table-container table tbody tr.activity-rojo {
+    background-color: #ffe6e6; /* Un rojo muy claro */
+    border-left: 5px solid #dc3545; /* Una línea roja a la izquierda */
+}
+
+/* Opcional: para que se vean bien al pasar el ratón por encima,
+   mantener un ligero cambio de color, pero que la actividad domine */
+.ranking-table-container table tbody tr.activity-verde:hover {
+    background-color: #d9ead3; /* Un verde ligeramente más oscuro al pasar el ratón */
+}
+.ranking-table-container table tbody tr.activity-amarillo:hover {
+    background-color: #faebd7; /* Un amarillo ligeramente más oscuro al pasar el ratón */
+}
+.ranking-table-container table tbody tr.activity-rojo:hover {
+    background-color: #f0d5d5; /* Un rojo ligeramente más oscuro al pasar el ratón */
+}

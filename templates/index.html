@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Torneo de Tenis - Ranking</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <!-- Font Awesome para iconos de género, si lo usas -->
+{% extends 'base.html' %}
+
+{% block title %}Ranking Principal{% endblock %}
+
+{% block head_extra %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         /* Estilos específicos para los botones de filtro */
@@ -68,122 +65,80 @@
         .gender-icon.male { color: #007bff; }
         .gender-icon.female { color: #e83e8c; }
     </style>
-</head>
-<body>
-    <header>
-        <div class="container">
-            <h1>Ranking del Torneo</h1>
-            <nav>
-                <ul>
-                    <a href="/">Inicio</a>
-                    <a href="/add_player">Añadir Jugador</a>
-                    <a href="/proximos_partidos">Próximos Partidos</a>
-                    <a href="/all_matches">Todos los Partidos</a>
-                    <a href="/organizer">Organizador</a>
-                    <a href="/manage_doubles_teams">Gestión Dobles</a>
-                    <a href="/logout">Cerrar Sesión</a>
-                </ul>
-            </nav>
+{% endblock %}
+
+{% block content %}
+    <section id="leaderboard-section">
+        <h2>Tabla de Posiciones</h2>
+        <div class="ranking-filters">
+            <button id="filter-single" onclick="filterRankings('single')" class="active">Individual</button>
+            <button id="filter-doubles_masculino" onclick="filterRankings('doubles_masculino')">Dobles Caballeros</button>
+            <button id="filter-doubles_femenino" onclick="filterRankings('doubles_femenino')">Dobles Femenino</button>
         </div>
-    </header>
 
-    <main class="container">
-        <!-- Bloque para mostrar mensajes flash -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-messages">
-                    {% for category, message in messages %}
-                        <div class="flash-message {{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-
-        <section id="leaderboard-section">
-            <h2>Tabla de Posiciones</h2>
-            <div class="ranking-filters">
-                <!-- CORRECCIÓN AQUÍ: IDs de los botones con GUION BAJO -->
-                <button id="filter-single" onclick="filterRankings('single')" class="active">Individual</button>
-                <button id="filter-doubles_masculino" onclick="filterRankings('doubles_masculino')">Dobles Caballeros</button>
-                <button id="filter-doubles_femenino" onclick="filterRankings('doubles_femenino')">Dobles Femenino</button>
-            </div>
-
-            <!-- Contenedor para la tabla de Ranking Individual -->
-            <div id="single-ranking-container" class="ranking-table-container">
-                <table id="leaderboard">
-                    <thead>
-                        <tr>
-                            <th>Foto</th>
-                            <th>Puesto</th>
-                            <th>Jugador</th>
-                            <th>Género</th>
-                            <th>Puesto Inicial</th>
-                            <th>Puestos Subidos</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Los jugadores individuales se cargarán aquí -->
+        <div id="single-ranking-container" class="ranking-table-container">
+            <table id="leaderboard">
+                <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Puesto</th>
+                        <th>Jugador</th>
+                        <th>Género</th>
+                        <th>Puesto Inicial</th>
+                        <th>Puestos Subidos</th>
+                        <th>Actividad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
                     </tbody>
-                </table>
-            </div>
-
-            <!-- Contenedor para la tabla de Ranking de Dobles Masculino (inicialmente oculto) -->
-            <div id="doubles-masculino-ranking-container" class="ranking-table-container" style="display: none;">
-                <table id="doubles-masculino-leaderboard">
-                    <thead>
-                        <tr>
-                            <th>Puesto</th>
-                            <th>Equipo</th>
-                            <th>Jugador 1</th>
-                            <th>Jugador 2</th>
-                            <th>Puesto Inicial</th>
-                            <th>Puntos</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Los equipos de dobles masculinos se cargarán aquí -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Contenedor para la tabla de Ranking de Dobles Femenino (inicialmente oculto) -->
-            <div id="doubles-femenino-ranking-container" class="ranking-table-container" style="display: none;">
-                <table id="doubles-femenino-leaderboard">
-                    <thead>
-                        <tr>
-                            <th>Puesto</th>
-                            <th>Equipo</th>
-                            <th>Jugador 1</th>
-                            <th>Jugador 2</th>
-                            <th>Puesto Inicial</th>
-                            <th>Puntos</th>
-                        </tr>
-                        </thead>
-                    <tbody>
-                        <!-- Los equipos de dobles femeninos se cargarán aquí -->
-                    </tbody>
-                </table>
-            </div>
-            
-        </section>
-
-        <!-- Sección de Historial de Jugador (se mantiene igual) -->
-        <section id="player-history-section" style="display: none;">
-            <h2 id="player-history-name">Historial de Jugador</h2>
-            <div id="player-history-list">
-                <!-- El historial se cargará aquí -->
-            </div>
-            <button onclick="hidePlayerHistory()" class="button" style="margin-top: 20px;">Volver a la Tabla</button>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 Torneo de Tenis. Todos los derechos reservados.</p>
+            </table>
         </div>
-    </footer>
 
-    <script src="/static/script.js"></script>
-</body>
-</html>
+        <div id="doubles-masculino-ranking-container" class="ranking-table-container" style="display: none;">
+            <table id="doubles-masculino-leaderboard">
+                <thead>
+                    <tr>
+                        <th>Puesto</th>
+                        <th>Equipo</th>
+                        <th>Jugador 1</th>
+                        <th>Jugador 2</th>
+                        <th>Puesto Inicial</th>
+                        <th>Puntos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+
+        <div id="doubles-femenino-ranking-container" class="ranking-table-container" style="display: none;">
+            <table id="doubles-femenino-leaderboard">
+                <thead>
+                    <tr>
+                        <th>Puesto</th>
+                        <th>Equipo</th>
+                        <th>Jugador 1</th>
+                        <th>Jugador 2</th>
+                        <th>Puesto Inicial</th>
+                        <th>Puntos</th>
+                    </tr>
+                    </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+        
+    </section>
+
+    <section id="player-history-section" style="display: none;">
+        <h2 id="player-history-name">Historial de Jugador</h2>
+        <div id="player-history-list">
+            </div>
+        <button onclick="hidePlayerHistory()" class="button" style="margin-top: 20px;">Volver a la Tabla</button>
+    </section>
+{% endblock %}
+
+{% block scripts_extra %}
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+{% endblock %}

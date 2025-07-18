@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torneos - Sistema de Tenis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+<body>
+    <header>
+        <h1>Torneos del Club</h1>
+        <nav>
+            <a href="/">Inicio</a>
+            {% if session.get('user_id') %}
+                <a href="/player_dashboard">Mi Panel</a>
+                <a href="/logout">Cerrar Sesión</a>
+            {% else %}
+                <a href="/login">Iniciar Sesión</a>
+                <a href="/register">Registrarse</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        <div class="filters-section">
+            <label for="tournament-status-filter">Filtrar por Estado:</label>
+            <select id="tournament-status-filter">
+                <option value="">Todos los Estados</option>
+                <option value="registration_open">Inscripciones Abiertas</option>
+                <option value="in_progress">En Curso</option>
+                <option value="completed">Completados</option>
+                <option value="cancelled">Cancelados</option>
+            </select>
+
+            <label for="tournament-type-filter">Filtrar por Tipo:</label>
+            <select id="tournament-type-filter">
+                <option value="">Todos los Tipos</option>
+                <option value="pyramid_single">Pirámide Individual</option>
+                <option value="pyramid_doubles_male">Pirámide Dobles Masculino</option>
+                <option value="pyramid_doubles_female">Pirámide Dobles Femenino</option>
+                <option value="satellite_single">Satélite Individual</option>
+                <option value="satellite_doubles_mixed">Satélite Dobles Mixto</option>
+                </select>
+            <button id="apply-filters-btn">Aplicar Filtros</button>
+        </div>
+
+        <div id="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="tournaments-display">
+            <h2>Lista de Torneos</h2>
+            <div id="tournaments-list">
+                <p>Cargando torneos...</p>
+            </div>
+            <p id="no-tournaments-found" style="display: none;">No se encontraron torneos con los filtros aplicados.</p>
+        </div>
+
+        <div id="doubles-enrollment-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeDoublesEnrollmentModal()">&times;</span>
+        <h2>Inscribirse a: <span id="modal-tournament-name"></span></h2>
+        <p>Este es un torneo de dobles. Puedes inscribirte con un compañero ya existente o buscar uno nuevo.</p>
+        <input type="hidden" id="modal-tournament-id">
+        <input type="hidden" id="modal-tournament-type">
+
+        <hr>
+
+        <h3>Opción 1: Inscribirse con un Compañero Existente</h3>
+        <p>Si tú y tu compañero ya formaron un equipo global en el sistema.</p>
+        <div class="form-group">
+            <label for="existing-team-select">Selecciona tu Equipo:</label>
+            <select id="existing-team-select" name="existing_team_id">
+                <option value="">Cargando equipos...</option>
+            </select>
+            <button id="enroll-with-existing-team-btn" class="button">Inscribir Equipo</button>
+        </div>
+
+        <hr>
+
+        <h3>Opción 2: Buscar y Solicitar un Compañero</h3>
+        <p>Envía una solicitud a otro jugador para formar un equipo para este torneo.</p>
+        <div class="form-group">
+            <label for="partner-search-input-modal">Buscar jugador por nombre o apellido:</label>
+            <input type="text" id="partner-search-input-modal" placeholder="Nombre o apellido del compañero">
+            <button id="search-partners-modal-btn" class="button">Buscar</button>
+        </div>
+        <div id="partner-search-results-modal">
+            <p>Los resultados de tu búsqueda aparecerán aquí.</p>
+        </div>
+        
+        <p id="doubles-enrollment-message" class="message"></p>
+
+    </div>
+</div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Sistema de Torneo de Tenis</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='tournaments.js') }}"></script>
+</body>
+</html>
